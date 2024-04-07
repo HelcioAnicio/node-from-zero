@@ -17,20 +17,34 @@ server.post('/videos', (request, reply) => {
 })
 
 
-server.get('/videos', () => {
-  const videos = database.list()
-  console.log(videos)
+server.get('/videos', (request) => {
+  const search = request.query.search
+  console.log(search)
+  const videos = database.list(search)
   return videos
 })
 
 
-server.put('/videos/:id', () => {
-  return 'Hello Node.js'
+server.put('/videos/:id', (request, reply) => {
+  const videoId = request.params.id
+  const { title, description, duration } = request.body
+
+  database.update(videoId, {
+    title,
+    description,
+    duration,
+  })
+
+  return reply.status(204).send()
 })
 
 
-server.delete('/videos/:id', () => {
-  return 'Hello Node.js'
+server.delete('/videos/:id', (request, reply) => {
+  const videoId = request.params.id
+
+  database.delete(videoId)
+
+  return reply.status(204).send()
 })
 
 
